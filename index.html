@@ -339,7 +339,6 @@
   </head>
   <body>
     <div class="container">
-      <!-- Página 01 - Login -->
       <div id="login-page" class="page active">
         <div class="header">
           <h1>🏥 Sistema de Prontuários Médicos</h1>
@@ -360,10 +359,8 @@
         </form>
       </div>
 
-      <!-- Rodapé -->
       <footer>Desenvolvido Kleber FS - PPGCC - BD UNESP 2025</footer>
 
-      <!-- Página 02 - Paciente -->
       <div id="paciente-page" class="page">
         <div class="header">
           <h1>👤 Portal do Paciente</h1>
@@ -380,7 +377,6 @@
         </div>
       </div>
 
-      <!-- Página 03 - Médico -->
       <div id="medico-page" class="page">
         <div class="header">
           <h1>👨‍⚕️ Portal do Médico</h1>
@@ -448,7 +444,6 @@
         </div>
       </div>
 
-      <!-- Página 04 - Administrador -->
       <div id="admin-page" class="page">
         <div class="header">
           <h1>⚙️ Painel Administrativo</h1>
@@ -504,7 +499,6 @@
         </div>
       </div>
 
-      <!-- Página 05 - Exames Paciente -->
       <div id="exames-paciente-page" class="page">
         <div class="header">
           <h1>🔬 Exames - Portal do Paciente</h1>
@@ -532,7 +526,6 @@
         </div>
       </div>
 
-      <!-- Página 06 - Exames Médico -->
       <div id="exames-medico-page" class="page">
         <div class="header">
           <h1>🔬 Exames - Portal do Médico</h1>
@@ -837,19 +830,30 @@
               container.innerHTML +=
                 '<div class="alert alert-info">Primeiro prontuário será criado</div>'
             }
+            document.getElementById('novo-prontuario').style.display = 'block'
           } else {
-            // Paciente novo
-            pacienteAtual = {
-              nome: nomePaciente,
-              id: nomePaciente.toLowerCase().replace(/\s+/g, ''),
-            }
-            container.innerHTML = `
+            // *** ALTERAÇÃO INSERIDA AQUI ***
+            // Paciente não encontrado, perguntar se deseja criar um novo
+            const confirmacao = confirm(
+              'Paciente não encontrado. Deseja abrir um novo prontuário para este paciente?'
+            )
+            if (confirmacao) {
+              // Se OK, continua para criar novo paciente
+              pacienteAtual = {
+                nome: nomePaciente,
+                id: nomePaciente.toLowerCase().replace(/\s+/g, ''),
+              }
+              container.innerHTML = `
                         <h3>Paciente: ${nomePaciente}</h3>
                         <div class="alert alert-info">Paciente novo - Primeiro prontuário será criado</div>
                     `
+              document.getElementById('novo-prontuario').style.display = 'block'
+            } else {
+              // Se Cancelar, recarrega a página
+              location.reload()
+              return
+            }
           }
-
-          document.getElementById('novo-prontuario').style.display = 'block'
         } catch (error) {
           console.error('Erro ao buscar paciente:', error)
           container.innerHTML =
@@ -1142,14 +1146,26 @@
 
       // Logout
       function logout() {
+        // *** ALTERAÇÃO INSERIDA AQUI ***
         usuarioLogado = null
         pacienteAtual = null
 
-        // Limpar formulários
+        // Limpar formulários e dados em cache
         document.getElementById('login-form').reset()
+        document.getElementById('prontuario-form').reset()
         document.getElementById('paciente-busca').value = ''
-        document.getElementById('informacoes').value = ''
 
+        // Limpar conteúdo dinâmico
+        document.getElementById('historico-paciente').innerHTML = ''
+        document.getElementById('paciente-prontuarios').innerHTML = ''
+        document.getElementById('usuarios-tbody').innerHTML = ''
+        document.getElementById('exames-paciente-tbody').innerHTML = ''
+        document.getElementById('exames-medico-tbody').innerHTML = ''
+
+        // Esconder seções
+        document.getElementById('novo-prontuario').style.display = 'none'
+
+        // Voltar para a página de login
         mostrarPagina('login-page')
       }
 
