@@ -99,6 +99,12 @@
         font-size: 16px;
         transition: all 0.3s ease;
       }
+      /* Força a exibição visual em maiúsculas para consistência */
+      input#usuario,
+      input#paciente-busca,
+      input#novo-nome {
+        text-transform: uppercase;
+      }
 
       input:focus,
       select:focus,
@@ -440,7 +446,7 @@
           <input
             type="text"
             id="paciente-busca"
-            placeholder="Digite o nome do paciente..."
+            placeholder="DIGITE O NOME DO PACIENTE..."
             autocomplete="off"
           />
           <div
@@ -508,7 +514,7 @@
         <div class="form-row">
           <div class="form-group">
             <label for="novo-nome">Nome:</label>
-            <input type="text" id="novo-nome" placeholder="Nome completo" />
+            <input type="text" id="novo-nome" placeholder="NOME COMPLETO" />
           </div>
           <div class="form-group">
             <label for="novo-id">ID/Usuário:</label>
@@ -853,8 +859,8 @@
           if (pacienteData.sucesso && pacienteData.pacientes.length > 0) {
             pacienteEncontrado =
               pacienteData.pacientes.find(
-                (p) => p.nome.toLowerCase() === nomePaciente.toLowerCase()
-              ) || null // Garante que é a busca exata ou nulo
+                (p) => p.nome.toUpperCase() === nomePaciente.toUpperCase()
+              ) || null
           }
 
           if (pacienteEncontrado) {
@@ -1229,6 +1235,1279 @@
       // Inicialização
       document.addEventListener('DOMContentLoaded', () => {
         console.log('Sistema de Prontuários Médicos carregado')
+
+        // Função para forçar inputs em maiúsculas em tempo real
+        const forceUppercase = (e) => {
+          e.target.value = e.target.value.toUpperCase()
+        }
+
+        // Aplicar a função aos campos desejados
+        document
+          .getElementById('usuario')
+          .addEventListener('input', forceUppercase)
+        document
+          .getElementById('paciente-busca')
+          .addEventListener('input', forceUppercase)
+        document
+          .getElementById('novo-nome')
+          .addEventListener('input', forceUppercase)
+      })
+    </script>
+  </body>
+</html>
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sistema de Prontuários Médicos</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏥</text></svg>"
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        min-height: 90vh;
+      }
+
+      footer {
+        text-align: center;
+        font-size: smaller;
+        color: gray;
+        margin: 20px 0;
+      }
+
+      .page {
+        display: none;
+        padding: 30px;
+        animation: fadeIn 0.5s ease-in;
+      }
+
+      .page.active {
+        display: block;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .header {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        color: white;
+        padding: 20px 30px;
+        margin: -30px -30px 30px -30px;
+        text-align: center;
+      }
+
+      .header h1 {
+        font-size: 2rem;
+        margin-bottom: 5px;
+      }
+
+      .header p {
+        opacity: 0.9;
+        font-size: 1.1rem;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #333;
+      }
+
+      input,
+      select,
+      textarea {
+        width: 100%;
+        padding: 12px 15px;
+        border: 2px solid #e1e5e9;
+        border-radius: 8px;
+        font-size: 16px;
+        transition: all 0.3s ease;
+      }
+      /* Força a exibição visual em maiúsculas para consistência */
+      input#usuario,
+      input#paciente-busca,
+      input#novo-nome {
+        text-transform: uppercase;
+      }
+
+      input:focus,
+      select:focus,
+      textarea:focus {
+        outline: none;
+        border-color: #4facfe;
+        box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+      }
+
+      input:read-only {
+        background-color: #f8f9fa;
+        cursor: not-allowed;
+      }
+
+      textarea {
+        min-height: 120px;
+        resize: vertical;
+      }
+
+      .btn {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-right: 10px;
+        margin-bottom: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .btn .spinner {
+        display: none;
+        width: 16px;
+        height: 16px;
+        border: 2px solid rgba(255, 255, 255, 0.5);
+        border-top-color: white;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        margin-right: 8px;
+      }
+
+      .btn.loading .spinner {
+        display: inline-block;
+      }
+
+      .btn.loading .btn-text {
+        display: inline-block;
+      }
+
+      .btn:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .btn:disabled {
+        cursor: not-allowed;
+        opacity: 0.6;
+      }
+
+      .btn-secondary {
+        background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+        color: #333;
+      }
+
+      .btn-danger {
+        background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+        color: #721c24;
+      }
+
+      .btn-success {
+        background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+        color: #155724;
+      }
+
+      .table-container {
+        overflow-x: auto;
+        margin: 20px 0;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      th,
+      td {
+        padding: 15px;
+        text-align: left;
+        border-bottom: 1px solid #e1e5e9;
+      }
+
+      th {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        font-weight: 600;
+      }
+
+      tr:hover {
+        background-color: #f8f9fa;
+      }
+
+      /* Estilos específicos para a tabela de administradores */
+      #usuarios-table th,
+      #usuarios-table td {
+        padding: 8px 12px; /* Reduz o padding vertical e horizontal */
+        vertical-align: middle; /* Alinha o texto verticalmente no centro */
+      }
+
+      #usuarios-table .btn {
+        padding: 5px 10px; /* Botão menor dentro da tabela */
+        font-size: 14px;
+        margin-right: 0;
+        margin-bottom: 0; /* Remove a margem do botão */
+      }
+
+      .prontuario-item {
+        background: #f8f9fa;
+        border: 1px solid #e1e5e9;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 15px 0;
+      }
+
+      .prontuario-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+        flex-wrap: wrap;
+      }
+
+      .alert {
+        padding: 15px;
+        border-radius: 8px;
+        margin: 15px 0;
+        font-weight: 500;
+      }
+
+      .alert-success {
+        background: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+      }
+
+      .alert-error {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+      }
+
+      .alert-info {
+        background: #d1ecf1;
+        color: #0c5460;
+        border: 1px solid #bee5eb;
+      }
+
+      .loading {
+        text-align: center;
+        padding: 40px;
+        color: #666;
+      }
+
+      .loading::after {
+        content: '';
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid #667eea;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-left: 10px;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .search-suggestions {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        border: 1px solid #e1e5e9;
+        border-top: none;
+        border-radius: 0 0 8px 8px;
+        max-height: 200px;
+        overflow-y: auto;
+        z-index: 1000;
+      }
+
+      .suggestion-item {
+        padding: 10px 15px;
+        cursor: pointer;
+        border-bottom: 1px solid #e1e5e9;
+      }
+
+      .suggestion-item:hover {
+        background: #f8f9fa;
+      }
+
+      .form-row {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+      }
+
+      .form-row .form-group {
+        flex: 1;
+        min-width: 200px;
+      }
+
+      .checkbox-group {
+        display: flex;
+        align-items: center;
+        margin: 10px 0;
+      }
+
+      .checkbox-group input[type='checkbox'] {
+        width: auto;
+        margin-right: 10px;
+      }
+
+      .crypto-info {
+        background: #e3f2fd;
+        border: 1px solid #bbdefb;
+        border-radius: 8px;
+        padding: 15px;
+        margin: 15px 0;
+        font-size: 14px;
+        color: #1565c0;
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          margin: 10px;
+          border-radius: 10px;
+        }
+
+        .page {
+          padding: 20px;
+        }
+
+        .header {
+          margin: -20px -20px 20px -20px;
+          padding: 15px 20px;
+        }
+
+        .header h1 {
+          font-size: 1.5rem;
+        }
+
+        .form-row {
+          flex-direction: column;
+        }
+
+        .btn {
+          width: 100%;
+          margin-right: 0;
+        }
+
+        table {
+          font-size: 14px;
+        }
+
+        th,
+        td {
+          padding: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div id="login-page" class="page active">
+        <div class="header">
+          <h1>🏥 Sistema de Prontuários Médicos</h1>
+          <p>Segurança e Tecnologia Blockchain</p>
+          <small>KFS V0.7</small>
+        </div>
+        <form id="login-form">
+          <div class="form-group">
+            <label for="usuario">Usuário:</label>
+            <input type="text" id="usuario" name="usuario" required />
+          </div>
+          <div class="form-group">
+            <label for="senha">Senha:</label>
+            <input type="password" id="senha" name="senha" required />
+          </div>
+          <div id="login-message"></div>
+          <button type="submit" id="btn-login" class="btn">
+            <span class="spinner"></span>
+            <span class="btn-text">Entrar</span>
+          </button>
+        </form>
+      </div>
+
+      <footer>Desenvolvido Kleber FS - PPGCC - BD UNESP 2025</footer>
+
+      <div id="paciente-page" class="page">
+        <div class="header">
+          <h1>👤 Portal do Paciente</h1>
+          <p id="paciente-nome"></p>
+        </div>
+        <div id="paciente-content">
+          <div id="paciente-prontuarios"></div>
+          <div style="margin-top: 30px">
+            <button class="btn btn-secondary" onclick="abrirExamesPaciente()">
+              Ver Exames de Hospitais/Clínicas
+            </button>
+            <button class="btn" onclick="logout()">Sair</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="medico-page" class="page">
+        <div class="header">
+          <h1>👨‍⚕️ Portal do Médico</h1>
+          <p id="medico-nome"></p>
+        </div>
+        <div class="form-group" style="position: relative">
+          <label for="paciente-busca">Nome do Paciente:</label>
+          <input
+            type="text"
+            id="paciente-busca"
+            placeholder="DIGITE O NOME DO PACIENTE..."
+            autocomplete="off"
+          />
+          <div
+            id="suggestions"
+            class="search-suggestions"
+            style="display: none"
+          ></div>
+        </div>
+        <button
+          type="button"
+          id="btn-buscar-paciente"
+          class="btn btn-secondary"
+          onclick="buscarPaciente()"
+        >
+          Buscar
+        </button>
+
+        <div id="historico-paciente"></div>
+
+        <div id="novo-prontuario" style="display: none">
+          <h3>Novo Prontuário</h3>
+          <div class="crypto-info">
+            🔒 As informações do prontuário serão criptografadas antes do
+            armazenamento no blockchain
+          </div>
+          <div id="prontuario-message"></div>
+          <form id="prontuario-form">
+            <div class="form-group">
+              <label for="informacoes">Informações do Prontuário:</label>
+              <textarea
+                id="informacoes"
+                name="informacoes"
+                placeholder="Digite as informações da consulta..."
+                required
+              ></textarea>
+            </div>
+            <div class="form-group">
+              <label for="medico-atual">Médico:</label>
+              <input type="text" id="medico-atual" readonly />
+            </div>
+            <button type="submit" class="btn btn-success">
+              Salvar Prontuário
+            </button>
+            <button
+              type="button"
+              class="btn btn-secondary"
+              onclick="abrirExamesMedico()"
+            >
+              Buscar Exames
+            </button>
+          </form>
+        </div>
+
+        <div style="margin-top: 30px">
+          <button class="btn" onclick="logout()">Sair</button>
+        </div>
+      </div>
+
+      <div id="admin-page" class="page">
+        <div class="header">
+          <h1>⚙️ Painel Administrativo</h1>
+          <p>Gerenciamento de Usuários</p>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="novo-nome">Nome:</label>
+            <input type="text" id="novo-nome" placeholder="NOME COMPLETO" />
+          </div>
+          <div class="form-group">
+            <label for="novo-id">ID/Usuário:</label>
+            <input type="text" id="novo-id" placeholder="ID único do usuário" />
+          </div>
+          <div class="form-group">
+            <label for="novo-tipo">Tipo de Usuário:</label>
+            <select id="novo-tipo">
+              <option value="paciente">Paciente</option>
+              <option value="medico">Médico</option>
+              <option value="admin">Administrador</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="nova-senha">Senha:</label>
+            <input
+              type="password"
+              id="nova-senha"
+              placeholder="Senha do usuário"
+            />
+          </div>
+        </div>
+
+        <button class="btn btn-success" onclick="criarUsuario()">
+          Cadastrar Usuário
+        </button>
+        <button class="btn" onclick="logout()">Sair</button>
+
+        <div id="admin-message"></div>
+
+        <div class="table-container">
+          <table id="usuarios-table">
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>ID/Usuário</th>
+                <th>Tipo</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="usuarios-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div id="exames-paciente-page" class="page">
+        <div class="header">
+          <h1>🔬 Exames - Portal do Paciente</h1>
+          <p id="exames-paciente-nome"></p>
+        </div>
+
+        <div id="exames-paciente-content">
+          <div class="table-container">
+            <table id="exames-paciente-table">
+              <thead>
+                <tr>
+                  <th>Nome do Exame</th>
+                  <th>Resultado</th>
+                  <th>Hospital/Clínica</th>
+                  <th>Data</th>
+                </tr>
+              </thead>
+              <tbody id="exames-paciente-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div style="margin-top: 30px">
+          <button class="btn" onclick="voltarPaciente()">Voltar</button>
+        </div>
+      </div>
+
+      <div id="exames-medico-page" class="page">
+        <div class="header">
+          <h1>🔬 Exames - Portal do Médico</h1>
+          <p id="exames-medico-paciente"></p>
+        </div>
+
+        <div id="exames-medico-content">
+          <div class="table-container">
+            <table id="exames-medico-table">
+              <thead>
+                <tr>
+                  <th>Selecionar</th>
+                  <th>Nome do Exame</th>
+                  <th>Resultado</th>
+                  <th>Hospital/Clínica</th>
+                  <th>Data</th>
+                </tr>
+              </thead>
+              <tbody id="exames-medico-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div style="margin-top: 30px">
+          <button
+            class="btn btn-success"
+            onclick="adicionarExamesSelecionados()"
+          >
+            Adicionar Selecionados
+          </button>
+          <button class="btn" onclick="voltarMedico()">Voltar</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Configuração da API
+      const API_URL = 'https://blockchain-medico.onrender.com'
+
+      // Estado da aplicação
+      let usuarioLogado = null
+      let pacienteAtual = null
+
+      // Utilitários de criptografia simples
+      function criptografar(texto) {
+        return btoa(encodeURIComponent(texto))
+      }
+
+      function descriptografar(textoCriptografado) {
+        try {
+          return decodeURIComponent(atob(textoCriptografado))
+        } catch (e) {
+          return textoCriptografado // Retorna o original se não conseguir descriptografar
+        }
+      }
+
+      // Navegação entre páginas
+      function mostrarPagina(pageId) {
+        document.querySelectorAll('.page').forEach((page) => {
+          page.classList.remove('active')
+        })
+        document.getElementById(pageId).classList.add('active')
+      }
+
+      function mostrarMensagem(elementId, mensagem, tipo = 'info') {
+        const element = document.getElementById(elementId)
+        element.innerHTML = `<div class="alert alert-${tipo}">${mensagem}</div>`
+        setTimeout(() => {
+          element.innerHTML = ''
+        }, 5000)
+      }
+
+      // Login
+      document
+        .getElementById('login-form')
+        .addEventListener('submit', async (e) => {
+          e.preventDefault()
+
+          const usuario = document.getElementById('usuario').value
+          const senha = document.getElementById('senha').value
+          const loginButton = document.getElementById('btn-login')
+
+          // Ativar spinner e desabilitar botão
+          loginButton.disabled = true
+          loginButton.classList.add('loading')
+          loginButton.querySelector('.btn-text').textContent = 'Entrando...'
+
+          try {
+            const response = await fetch(`${API_URL}/login`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ usuario, senha }),
+            })
+
+            const data = await response.json()
+
+            if (data.sucesso) {
+              usuarioLogado = data.usuario
+
+              switch (usuarioLogado.tipo) {
+                case 'paciente':
+                  await carregarPaciente()
+                  break
+                case 'medico':
+                  carregarMedico()
+                  break
+                case 'admin':
+                  await carregarAdmin()
+                  break
+              }
+            } else {
+              mostrarMensagem(
+                'login-message',
+                data.mensagem || 'Usuário não encontrado',
+                'error'
+              )
+            }
+          } catch (error) {
+            console.error('Erro no login:', error)
+            mostrarMensagem(
+              'login-message',
+              'Erro de conexão com o servidor',
+              'error'
+            )
+          } finally {
+            // Desativar spinner e reabilitar botão
+            loginButton.disabled = false
+            loginButton.classList.remove('loading')
+            loginButton.querySelector('.btn-text').textContent = 'Entrar'
+          }
+        })
+
+      // Carregamento do paciente
+      async function carregarPaciente() {
+        document.getElementById(
+          'paciente-nome'
+        ).textContent = `Bem-vindo, ${usuarioLogado.nome}`
+
+        try {
+          const response = await fetch(
+            `${API_URL}/prontuario/${usuarioLogado.id}`
+          )
+          const data = await response.json()
+
+          const container = document.getElementById('paciente-prontuarios')
+
+          if (data.sucesso && data.prontuarios.length > 0) {
+            container.innerHTML = '<h3>Seus Prontuários:</h3>'
+
+            data.prontuarios.forEach((prontuario) => {
+              const informacoesDescriptografadas = descriptografar(
+                prontuario.data.informacoes
+              )
+
+              container.innerHTML += `
+                            <div class="prontuario-item">
+                                <div class="prontuario-header">
+                                    <strong>Dr(a). ${
+                                      prontuario.data.medico
+                                    }</strong>
+                                    <span>${new Date(
+                                      prontuario.timestamp
+                                    ).toLocaleDateString('pt-BR')}</span>
+                                </div>
+                                <p>${informacoesDescriptografadas}</p>
+                            </div>
+                        `
+            })
+          } else {
+            container.innerHTML =
+              '<div class="alert alert-info">Paciente novo - Nenhum prontuário encontrado</div>'
+          }
+
+          mostrarPagina('paciente-page')
+        } catch (error) {
+          console.error('Erro ao carregar prontuários:', error)
+          mostrarMensagem(
+            'paciente-content',
+            'Erro ao carregar prontuários',
+            'error'
+          )
+        }
+      }
+
+      // Carregamento do médico
+      function carregarMedico() {
+        document.getElementById(
+          'medico-nome'
+        ).textContent = `Dr(a). ${usuarioLogado.nome}`
+        document.getElementById('medico-atual').value = usuarioLogado.nome
+
+        // Configurar autocomplete
+        const input = document.getElementById('paciente-busca')
+        const suggestions = document.getElementById('suggestions')
+
+        input.addEventListener('input', async (e) => {
+          const termo = e.target.value
+
+          if (termo.length < 2) {
+            suggestions.style.display = 'none'
+            return
+          }
+
+          try {
+            const response = await fetch(
+              `${API_URL}/pacientes?termo=${encodeURIComponent(termo)}`
+            )
+            const data = await response.json()
+
+            if (data.sucesso && data.pacientes.length > 0) {
+              suggestions.innerHTML = ''
+              data.pacientes.forEach((paciente) => {
+                const div = document.createElement('div')
+                div.className = 'suggestion-item'
+                div.textContent = paciente.nome
+                div.onclick = () => {
+                  input.value = paciente.nome
+                  pacienteAtual = paciente
+                  suggestions.style.display = 'none'
+                  buscarPaciente()
+                }
+                suggestions.appendChild(div)
+              })
+              suggestions.style.display = 'block'
+            } else {
+              suggestions.style.display = 'none'
+            }
+          } catch (error) {
+            console.error('Erro na busca:', error)
+          }
+        })
+
+        document.addEventListener('click', (e) => {
+          if (!e.target.closest('.form-group')) {
+            suggestions.style.display = 'none'
+          }
+        })
+
+        mostrarPagina('medico-page')
+      }
+
+      // Buscar paciente
+      async function buscarPaciente() {
+        const nomePaciente = document.getElementById('paciente-busca').value
+
+        if (!nomePaciente) {
+          mostrarMensagem(
+            'historico-paciente',
+            'Por favor, digite o nome do paciente',
+            'error'
+          )
+          return
+        }
+
+        const container = document.getElementById('historico-paciente')
+        container.innerHTML =
+          '<div class="loading">Buscando histórico do paciente...</div>'
+        document.getElementById('novo-prontuario').style.display = 'none' // Esconde o form inicialmente
+
+        try {
+          // Buscar paciente
+          const pacienteResponse = await fetch(
+            `${API_URL}/pacientes?termo=${encodeURIComponent(nomePaciente)}`
+          )
+          const pacienteData = await pacienteResponse.json()
+
+          let pacienteEncontrado = null
+          if (pacienteData.sucesso && pacienteData.pacientes.length > 0) {
+            pacienteEncontrado =
+              pacienteData.pacientes.find(
+                (p) => p.nome.toUpperCase() === nomePaciente.toUpperCase()
+              ) || null
+          }
+
+          if (pacienteEncontrado) {
+            pacienteAtual = pacienteEncontrado
+
+            // Desabilitar campo de busca e botão após o sucesso
+            document.getElementById('paciente-busca').readOnly = true
+            document.getElementById('btn-buscar-paciente').disabled = true
+
+            // Buscar prontuários
+            const prontuarioResponse = await fetch(
+              `${API_URL}/prontuario/${pacienteEncontrado.id}`
+            )
+            const prontuarioData = await prontuarioResponse.json()
+
+            container.innerHTML = `<h3>Paciente: ${pacienteEncontrado.nome}</h3>`
+
+            if (
+              prontuarioData.sucesso &&
+              prontuarioData.prontuarios.length > 0
+            ) {
+              container.innerHTML += '<h4>Histórico de Consultas:</h4>'
+
+              prontuarioData.prontuarios.forEach((prontuario) => {
+                const informacoesDescriptografadas = descriptografar(
+                  prontuario.data.informacoes
+                )
+
+                container.innerHTML += `
+                                <div class="prontuario-item">
+                                    <div class="prontuario-header">
+                                        <strong>Dr(a). ${
+                                          prontuario.data.medico
+                                        }</strong>
+                                        <span>${new Date(
+                                          prontuario.timestamp
+                                        ).toLocaleDateString('pt-BR')}</span>
+                                    </div>
+                                    <p>${informacoesDescriptografadas}</p>
+                                </div>
+                            `
+              })
+            } else {
+              container.innerHTML +=
+                '<div class="alert alert-info">Primeiro prontuário será criado</div>'
+            }
+            document.getElementById('novo-prontuario').style.display = 'block'
+          } else {
+            // Paciente não encontrado
+            alert(
+              'Usuário não cadastrado no Sistema de Prontuários. Favor cadastrar este usuário. Contacte o administrador'
+            )
+            logout()
+            location.reload()
+            return // Interrompe a função
+          }
+        } catch (error) {
+          console.error('Erro ao buscar paciente:', error)
+          container.innerHTML =
+            '<div class="alert alert-error">Erro ao buscar paciente</div>'
+        }
+      }
+
+      // Salvar prontuário
+      document
+        .getElementById('prontuario-form')
+        .addEventListener('submit', async (e) => {
+          e.preventDefault()
+
+          const informacoes = document.getElementById('informacoes').value
+
+          if (!pacienteAtual) {
+            mostrarMensagem(
+              'prontuario-message',
+              'Selecione um paciente primeiro',
+              'error'
+            )
+            return
+          }
+
+          try {
+            const informacoesCriptografadas = criptografar(informacoes)
+
+            const response = await fetch(`${API_URL}/prontuario`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                pacienteId: pacienteAtual.id,
+                medico: usuarioLogado.nome,
+                informacoes: informacoesCriptografadas,
+              }),
+            })
+
+            const data = await response.json()
+
+            if (data.sucesso) {
+              mostrarMensagem(
+                'prontuario-message',
+                'Prontuário salvo com sucesso! Atualizando...',
+                'success'
+              )
+              document.getElementById('informacoes').value = ''
+              await buscarPaciente() // Recarrega a lista de prontuários
+            } else {
+              mostrarMensagem(
+                'prontuario-message',
+                'Erro ao salvar prontuário',
+                'error'
+              )
+            }
+          } catch (error) {
+            console.error('Erro ao salvar prontuário:', error)
+            mostrarMensagem(
+              'prontuario-message',
+              'Erro de conexão ao salvar',
+              'error'
+            )
+          }
+        })
+
+      // Administrador
+      async function carregarAdmin() {
+        // Limpar os campos do formulário de criação de usuário
+        document.getElementById('novo-nome').value = ''
+        document.getElementById('novo-id').value = ''
+        document.getElementById('novo-tipo').value = 'paciente' // Reseta para o valor padrão
+        document.getElementById('nova-senha').value = ''
+
+        await carregarUsuarios()
+        mostrarPagina('admin-page')
+      }
+
+      async function carregarUsuarios() {
+        try {
+          const response = await fetch(`${API_URL}/usuarios`)
+          const data = await response.json()
+
+          const tbody = document.getElementById('usuarios-tbody')
+          tbody.innerHTML = ''
+
+          if (data.sucesso) {
+            data.usuarios.forEach((usuario) => {
+              const row = tbody.insertRow()
+              row.innerHTML = `
+                            <td>${usuario.nome}</td>
+                            <td>${usuario.id}</td>
+                            <td>${usuario.tipo}</td>
+                            <td>
+                                <button class="btn btn-danger" onclick="deletarUsuario('${
+                                  usuario.id
+                                }')" 
+                                        ${
+                                          usuario.id === 'admin'
+                                            ? 'disabled'
+                                            : ''
+                                        }>
+                                    Deletar
+                                </button>
+                            </td>
+                        `
+            })
+          }
+        } catch (error) {
+          console.error('Erro ao carregar usuários:', error)
+        }
+      }
+
+      async function criarUsuario() {
+        const nome = document.getElementById('novo-nome').value
+        const id = document.getElementById('novo-id').value
+        const tipo = document.getElementById('novo-tipo').value
+        const senha = document.getElementById('nova-senha').value
+
+        if (!nome || !id || !senha) {
+          mostrarMensagem('admin-message', 'Preencha todos os campos', 'error')
+          return
+        }
+
+        try {
+          const response = await fetch(`${API_URL}/usuarios`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ nome, id, tipo, senha }),
+          })
+
+          const data = await response.json()
+
+          if (data.sucesso) {
+            mostrarMensagem(
+              'admin-message',
+              'Usuário criado com sucesso!',
+              'success'
+            )
+            document.getElementById('novo-nome').value = ''
+            document.getElementById('novo-id').value = ''
+            document.getElementById('nova-senha').value = ''
+            await carregarUsuarios()
+          } else {
+            mostrarMensagem('admin-message', data.mensagem, 'error')
+          }
+        } catch (error) {
+          console.error('Erro ao criar usuário:', error)
+          mostrarMensagem('admin-message', 'Erro de conexão', 'error')
+        }
+      }
+
+      async function deletarUsuario(id) {
+        if (!confirm(`Tem certeza que deseja deletar o usuário ${id}?`)) {
+          return
+        }
+
+        try {
+          const response = await fetch(`${API_URL}/usuarios/${id}`, {
+            method: 'DELETE',
+          })
+
+          const data = await response.json()
+
+          if (data.sucesso) {
+            mostrarMensagem(
+              'admin-message',
+              'Usuário deletado com sucesso!',
+              'success'
+            )
+            await carregarUsuarios()
+          } else {
+            mostrarMensagem('admin-message', data.mensagem, 'error')
+          }
+        } catch (error) {
+          console.error('Erro ao deletar usuário:', error)
+          mostrarMensagem('admin-message', 'Erro de conexão', 'error')
+        }
+      }
+
+      // Exames - Paciente
+      async function abrirExamesPaciente() {
+        document.getElementById('exames-paciente-nome').textContent =
+          usuarioLogado.nome
+
+        try {
+          const response = await fetch(`${API_URL}/exames/${usuarioLogado.id}`)
+          const data = await response.json()
+
+          const tbody = document.getElementById('exames-paciente-tbody')
+          tbody.innerHTML = ''
+
+          if (data.sucesso && data.exames.length > 0) {
+            data.exames.forEach((exame) => {
+              const row = tbody.insertRow()
+              row.innerHTML = `
+                            <td>${exame.nomeExame}</td>
+                            <td>${exame.resultado}</td>
+                            <td>${exame.nomeHospital}</td>
+                            <td>${new Date(exame.dataExame).toLocaleDateString(
+                              'pt-BR'
+                            )}</td>
+                        `
+            })
+          } else {
+            tbody.innerHTML =
+              '<tr><td colspan="4" class="text-center">Nenhum exame encontrado</td></tr>'
+          }
+
+          mostrarPagina('exames-paciente-page')
+        } catch (error) {
+          console.error('Erro ao carregar exames:', error)
+        }
+      }
+
+      function voltarPaciente() {
+        mostrarPagina('paciente-page')
+      }
+
+      // Exames - Médico
+      async function abrirExamesMedico() {
+        if (!pacienteAtual) {
+          alert('Selecione um paciente primeiro')
+          return
+        }
+
+        document.getElementById(
+          'exames-medico-paciente'
+        ).textContent = `Exames de: ${pacienteAtual.nome}`
+
+        try {
+          const response = await fetch(
+            `${API_URL}/exames-nome/${encodeURIComponent(pacienteAtual.nome)}`
+          )
+          const data = await response.json()
+
+          const tbody = document.getElementById('exames-medico-tbody')
+          tbody.innerHTML = ''
+
+          if (data.sucesso && data.exames.length > 0) {
+            data.exames.forEach((exame, index) => {
+              const row = tbody.insertRow()
+              row.innerHTML = `
+                            <td><input type="checkbox" id="exame-${index}" data-exame='${JSON.stringify(
+                exame
+              )}'></td>
+                            <td>${exame.nomeExame}</td>
+                            <td>${exame.resultado}</td>
+                            <td>${exame.nomeHospital}</td>
+                            <td>${new Date(exame.dataExame).toLocaleDateString(
+                              'pt-BR'
+                            )}</td>
+                        `
+            })
+          } else {
+            tbody.innerHTML =
+              '<tr><td colspan="5" class="text-center">Nenhum exame encontrado</td></tr>'
+          }
+
+          mostrarPagina('exames-medico-page')
+        } catch (error) {
+          console.error('Erro ao carregar exames:', error)
+        }
+      }
+
+      function adicionarExamesSelecionados() {
+        const checkboxes = document.querySelectorAll(
+          '#exames-medico-tbody input[type="checkbox"]:checked'
+        )
+        let textoExames = ''
+
+        checkboxes.forEach((checkbox) => {
+          const exame = JSON.parse(checkbox.dataset.exame)
+          textoExames += `\n\n--- EXAME: ${exame.nomeExame} ---\n`
+          textoExames += `Hospital: ${exame.nomeHospital}\n`
+          textoExames += `Resultado: ${exame.resultado}\n`
+          textoExames += `Data: ${new Date(exame.dataExame).toLocaleDateString(
+            'pt-BR'
+          )}`
+        })
+
+        if (textoExames) {
+          const informacoesAtual = document.getElementById('informacoes').value
+          document.getElementById('informacoes').value =
+            informacoesAtual + textoExames
+        }
+
+        voltarMedico()
+      }
+
+      function voltarMedico() {
+        mostrarPagina('medico-page')
+      }
+
+      // Logout
+      function logout() {
+        usuarioLogado = null
+        pacienteAtual = null
+
+        // Limpar formulários
+        document.getElementById('login-form').reset()
+        document.getElementById('paciente-busca').value = ''
+        document.getElementById('informacoes').value = ''
+        document.getElementById('historico-paciente').innerHTML = ''
+        document.getElementById('novo-prontuario').style.display = 'none'
+
+        // Reabilitar campo de busca e botão para a próxima sessão
+        document.getElementById('paciente-busca').readOnly = false
+        document.getElementById('btn-buscar-paciente').disabled = false
+
+        mostrarPagina('login-page')
+      }
+
+      // Inicialização
+      document.addEventListener('DOMContentLoaded', () => {
+        console.log('Sistema de Prontuários Médicos carregado')
+
+        // Função para forçar inputs em maiúsculas em tempo real
+        const forceUppercase = (e) => {
+          e.target.value = e.target.value.toUpperCase()
+        }
+
+        // Aplicar a função aos campos desejados
+        document
+          .getElementById('usuario')
+          .addEventListener('input', forceUppercase)
+        document
+          .getElementById('paciente-busca')
+          .addEventListener('input', forceUppercase)
+        document
+          .getElementById('novo-nome')
+          .addEventListener('input', forceUppercase)
       })
     </script>
   </body>
