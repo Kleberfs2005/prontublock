@@ -104,6 +104,11 @@
         box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
       }
 
+      input:read-only {
+        background-color: #f8f9fa;
+        cursor: not-allowed;
+      }
+
       textarea {
         min-height: 120px;
         resize: vertical;
@@ -123,9 +128,14 @@
         margin-bottom: 10px;
       }
 
-      .btn:hover {
+      .btn:hover:not(:disabled) {
         transform: translateY(-2px);
         box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .btn:disabled {
+        cursor: not-allowed;
+        opacity: 0.6;
       }
 
       .btn-secondary {
@@ -398,6 +408,7 @@
         </div>
         <button
           type="button"
+          id="btn-buscar-paciente"
           class="btn btn-secondary"
           onclick="buscarPaciente()"
         >
@@ -795,6 +806,10 @@
           if (pacienteEncontrado) {
             pacienteAtual = pacienteEncontrado
 
+            // Desabilitar campo de busca e botão após o sucesso
+            document.getElementById('paciente-busca').readOnly = true
+            document.getElementById('btn-buscar-paciente').disabled = true
+
             // Buscar prontuários
             const prontuarioResponse = await fetch(
               `${API_URL}/prontuario/${pacienteEncontrado.id}`
@@ -1143,6 +1158,10 @@
         document.getElementById('informacoes').value = ''
         document.getElementById('historico-paciente').innerHTML = ''
         document.getElementById('novo-prontuario').style.display = 'none'
+
+        // Reabilitar campo de busca e botão para a próxima sessão
+        document.getElementById('paciente-busca').readOnly = false
+        document.getElementById('btn-buscar-paciente').disabled = false
 
         mostrarPagina('login-page')
       }
