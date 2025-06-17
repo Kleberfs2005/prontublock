@@ -210,17 +210,18 @@
         background-color: #f8f9fa;
       }
 
+      /* Estilos específicos para a tabela de administradores */
       #usuarios-table th,
       #usuarios-table td {
-        padding: 8px 12px;
-        vertical-align: middle;
+        padding: 8px 12px; /* Reduz o padding vertical e horizontal */
+        vertical-align: middle; /* Alinha o texto verticalmente no centro */
       }
 
       #usuarios-table .btn {
-        padding: 5px 10px;
+        padding: 5px 10px; /* Botão menor dentro da tabela */
         font-size: 14px;
         margin-right: 0;
-        margin-bottom: 0;
+        margin-bottom: 0; /* Remove a margem do botão */
       }
 
       .prontuario-item {
@@ -326,6 +327,17 @@
         min-width: 200px;
       }
 
+      .checkbox-group {
+        display: flex;
+        align-items: center;
+        margin: 10px 0;
+      }
+
+      .checkbox-group input[type='checkbox'] {
+        width: auto;
+        margin-right: 10px;
+      }
+
       .crypto-info {
         background: #e3f2fd;
         border: 1px solid #bbdefb;
@@ -363,16 +375,28 @@
           width: 100%;
           margin-right: 0;
         }
+
+        table {
+          font-size: 14px;
+        }
+
+        th,
+        td {
+          padding: 10px;
+        }
       }
     </style>
   </head>
   <body>
+    <script>
+      //pagina01 - login ****************************************************
+    </script>
     <div class="container">
       <div id="login-page" class="page active">
         <div class="header">
-          <h1>🏥 Sistema de Prontuários Médicos</h1>
+          <h1>🏥 Sistema de Prontuários Médicos online</h1>
           <p>Segurança e Tecnologia Blockchain</p>
-          <small>KFS V0.8</small>
+          <small>KFS V0.7</small>
         </div>
         <form id="login-form">
           <div class="form-group">
@@ -394,7 +418,9 @@
       </div>
 
       <footer>💻Desenvolvido Kleber FS - PPGCC - BD UNESP 2025</footer>
-
+      <script>
+        //pagina02 - Paciente ***********************************************
+      </script>
       <div id="paciente-page" class="page">
         <div class="header">
           <h1>👤 Portal do Paciente</h1>
@@ -410,18 +436,20 @@
           </div>
         </div>
       </div>
-
+      <script>
+        //pagina03 - Médico *************************************************
+      </script>
       <div id="medico-page" class="page">
         <div class="header">
           <h1>👨‍⚕️ Portal do Médico</h1>
           <p id="medico-nome"></p>
         </div>
         <div class="form-group" style="position: relative">
-          <label for="paciente-busca">Buscar Usuário/Paciente:</label>
+          <label for="paciente-busca">Nome do Paciente:</label>
           <input
             type="text"
             id="paciente-busca"
-            placeholder="Digite o nome do usuário ou paciente..."
+            placeholder="Digite o nome do paciente..."
             autocomplete="off"
           />
           <div
@@ -444,8 +472,8 @@
         <div id="novo-prontuario" style="display: none">
           <h3>Novo Prontuário</h3>
           <div class="crypto-info">
-            🔒 As informações do prontuário serão criptografadas e o tipo do
-            usuário será alterado para "paciente" permanentemente.
+            🔒 As informações do prontuário serão criptografadas antes do
+            armazenamento no blockchain
           </div>
           <div id="prontuario-message"></div>
           <form id="prontuario-form">
@@ -479,7 +507,9 @@
           <button class="btn" onclick="logout()">Sair</button>
         </div>
       </div>
-
+      <script>
+        //pagina03 - Administrador*************************************************
+      </script>
       <div id="admin-page" class="page">
         <div class="header">
           <h1>⚙️ Painel Administrativo</h1>
@@ -498,7 +528,7 @@
           <div class="form-group">
             <label for="novo-tipo">Tipo de Usuário:</label>
             <select id="novo-tipo">
-              <option value="usuario">Usuário</option>
+              <option value="paciente">Paciente</option>
               <option value="medico">Médico</option>
               <option value="admin">Administrador</option>
             </select>
@@ -534,7 +564,9 @@
           </table>
         </div>
       </div>
-
+      <script>
+        //pagina05 - Exames - Visualização do paciente ****************************************************
+      </script>
       <div id="exames-paciente-page" class="page">
         <div class="header">
           <h1>🔬 Exames - Portal do Paciente</h1>
@@ -561,12 +593,15 @@
           <button class="btn" onclick="voltarPaciente()">Voltar</button>
         </div>
       </div>
-
+      <script>
+        //pagina06 - Exames - Visualização do Médico ****************************************************
+      </script>
       <div id="exames-medico-page" class="page">
         <div class="header">
           <h1>🔬 Exames - Portal do Médico</h1>
           <p id="exames-medico-paciente"></p>
         </div>
+
         <div id="exames-medico-content">
           <div class="table-container">
             <table id="exames-medico-table">
@@ -583,6 +618,7 @@
             </table>
           </div>
         </div>
+
         <div style="margin-top: 30px">
           <button
             class="btn btn-success"
@@ -603,7 +639,7 @@
       let usuarioLogado = null
       let pacienteAtual = null
 
-      // Utilitários
+      // Utilitários de criptografia simples
       function criptografar(texto) {
         return btoa(encodeURIComponent(texto))
       }
@@ -612,10 +648,11 @@
         try {
           return decodeURIComponent(atob(textoCriptografado))
         } catch (e) {
-          return textoCriptografado
+          return textoCriptografado // Retorna o original se não conseguir descriptografar
         }
       }
 
+      // Navegação entre páginas
       function mostrarPagina(pageId) {
         document.querySelectorAll('.page').forEach((page) => {
           page.classList.remove('active')
@@ -625,7 +662,7 @@
 
       function mostrarMensagem(elementId, mensagem, tipo = 'info') {
         const element = document.getElementById(elementId)
-        element.innerHTML = `<div class="alert alert-<span class="math-inline">\{tipo\}"\></span>{mensagem}</div>`
+        element.innerHTML = `<div class="alert alert-${tipo}">${mensagem}</div>`
         setTimeout(() => {
           element.innerHTML = ''
         }, 5000)
@@ -636,10 +673,12 @@
         .getElementById('login-form')
         .addEventListener('submit', async (e) => {
           e.preventDefault()
+
           const usuario = document.getElementById('usuario').value
           const senha = document.getElementById('senha').value
           const loginButton = document.getElementById('btn-login')
 
+          // Ativar spinner e desabilitar botão
           loginButton.disabled = true
           loginButton.classList.add('loading')
           loginButton.querySelector('.btn-text').textContent = 'Entrando...'
@@ -647,13 +686,17 @@
           try {
             const response = await fetch(`${API_URL}/login`, {
               method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
+              headers: {
+                'Content-Type': 'application/json',
+              },
               body: JSON.stringify({ usuario, senha }),
             })
+
             const data = await response.json()
 
             if (data.sucesso) {
               usuarioLogado = data.usuario
+
               switch (usuarioLogado.tipo) {
                 case 'paciente':
                   await carregarPaciente()
@@ -664,63 +707,73 @@
                 case 'admin':
                   await carregarAdmin()
                   break
-                case 'usuario':
-                  alert(
-                    'Usuário cadastrado, sem dados médicos. Dados disponíveis, após primeira consulta.'
-                  )
-                  logout()
-                  break
               }
             } else {
               mostrarMensagem(
                 'login-message',
-                data.mensagem || 'Usuário ou senha inválidos',
+                data.mensagem || 'Usuário não encontrado',
                 'error'
               )
             }
           } catch (error) {
+            console.error('Erro no login:', error)
             mostrarMensagem(
               'login-message',
               'Erro de conexão com o servidor',
               'error'
             )
           } finally {
+            // Desativar spinner e reabilitar botão
             loginButton.disabled = false
             loginButton.classList.remove('loading')
             loginButton.querySelector('.btn-text').textContent = 'Entrar'
           }
         })
 
-      // Paciente
+      // Carregamento do paciente
       async function carregarPaciente() {
         document.getElementById(
           'paciente-nome'
         ).textContent = `Bem-vindo, ${usuarioLogado.nome}`
+
         try {
           const response = await fetch(
-            `<span class="math-inline">\{API\_URL\}/prontuario/</span>{usuarioLogado.id}`
+            `${API_URL}/prontuario/${usuarioLogado.id}`
           )
           const data = await response.json()
+
           const container = document.getElementById('paciente-prontuarios')
+
           if (data.sucesso && data.prontuarios.length > 0) {
             container.innerHTML = '<h3>Seus Prontuários:</h3>'
+
             data.prontuarios.forEach((prontuario) => {
-              const info = descriptografar(prontuario.data.informacoes)
+              const informacoesDescriptografadas = descriptografar(
+                prontuario.data.informacoes
+              )
+
               container.innerHTML += `
-                <div class="prontuario-item">
-                  <div class="prontuario-header">
-                    <strong>Dr(a). <span class="math-inline">\{prontuario\.data\.medico\}</strong\>
-<span\></span>{new Date(prontuario.timestamp).toLocaleDateString('pt-BR')}</span>
-                  </div>
-                  <p>${info}</p>
-                </div>`
+                            <div class="prontuario-item">
+                                <div class="prontuario-header">
+                                    <strong>Dr(a). ${
+                                      prontuario.data.medico
+                                    }</strong>
+                                    <span>${new Date(
+                                      prontuario.timestamp
+                                    ).toLocaleDateString('pt-BR')}</span>
+                                </div>
+                                <p>${informacoesDescriptografadas}</p>
+                            </div>
+                        `
             })
           } else {
             container.innerHTML =
-              '<div class="alert alert-info">Nenhum prontuário encontrado.</div>'
+              '<div class="alert alert-info">Paciente novo - Nenhum prontuário encontrado</div>'
           }
+
           mostrarPagina('paciente-page')
         } catch (error) {
+          console.error('Erro ao carregar prontuários:', error)
           mostrarMensagem(
             'paciente-content',
             'Erro ao carregar prontuários',
@@ -729,32 +782,37 @@
         }
       }
 
-      // Médico
+      // Carregamento do médico
       function carregarMedico() {
         document.getElementById(
           'medico-nome'
         ).textContent = `Dr(a). ${usuarioLogado.nome}`
         document.getElementById('medico-atual').value = usuarioLogado.nome
+
+        // Configurar autocomplete
         const input = document.getElementById('paciente-busca')
         const suggestions = document.getElementById('suggestions')
 
         input.addEventListener('input', async (e) => {
           const termo = e.target.value
+
           if (termo.length < 2) {
             suggestions.style.display = 'none'
             return
           }
+
           try {
             const response = await fetch(
-              `<span class="math-inline">\{API\_URL\}/pacientes?termo\=</span>{encodeURIComponent(termo)}`
+              `${API_URL}/pacientes?termo=${encodeURIComponent(termo)}`
             )
             const data = await response.json()
+
             if (data.sucesso && data.pacientes.length > 0) {
               suggestions.innerHTML = ''
               data.pacientes.forEach((paciente) => {
                 const div = document.createElement('div')
                 div.className = 'suggestion-item'
-                div.textContent = `${paciente.nome} (Tipo: ${paciente.tipo})`
+                div.textContent = paciente.nome
                 div.onclick = () => {
                   input.value = paciente.nome
                   pacienteAtual = paciente
@@ -781,138 +839,150 @@
         mostrarPagina('medico-page')
       }
 
+      // Buscar paciente
       async function buscarPaciente() {
         const nomePaciente = document.getElementById('paciente-busca').value
-        if (!nomePaciente) return
+
+        if (!nomePaciente) {
+          mostrarMensagem(
+            'historico-paciente',
+            'Por favor, digite o nome do paciente',
+            'error'
+          )
+          return
+        }
 
         const container = document.getElementById('historico-paciente')
-        container.innerHTML = '<div class="loading">Buscando...</div>'
-        document.getElementById('novo-prontuario').style.display = 'none'
+        container.innerHTML =
+          '<div class="loading">Buscando histórico do paciente...</div>'
+        document.getElementById('novo-prontuario').style.display = 'none' // Esconde o form inicialmente
 
         try {
-          // A variável pacienteAtual já foi definida no clique da sugestão
-          if (
-            pacienteAtual &&
-            pacienteAtual.nome.toLowerCase() === nomePaciente.toLowerCase()
-          ) {
+          // Buscar paciente
+          const pacienteResponse = await fetch(
+            `${API_URL}/pacientes?termo=${encodeURIComponent(nomePaciente)}`
+          )
+          const pacienteData = await pacienteResponse.json()
+
+          let pacienteEncontrado = null
+          if (pacienteData.sucesso && pacienteData.pacientes.length > 0) {
+            pacienteEncontrado =
+              pacienteData.pacientes.find(
+                (p) => p.nome.toLowerCase() === nomePaciente.toLowerCase()
+              ) || null // Garante que é a busca exata ou nulo
+          }
+
+          if (pacienteEncontrado) {
+            pacienteAtual = pacienteEncontrado
+
+            // Desabilitar campo de busca e botão após o sucesso
             document.getElementById('paciente-busca').readOnly = true
             document.getElementById('btn-buscar-paciente').disabled = true
 
+            // Buscar prontuários
             const prontuarioResponse = await fetch(
-              `<span class="math-inline">\{API\_URL\}/prontuario/</span>{pacienteAtual.id}`
+              `${API_URL}/prontuario/${pacienteEncontrado.id}`
             )
             const prontuarioData = await prontuarioResponse.json()
 
-            container.innerHTML = `<h3>Paciente: ${pacienteAtual.nome} (ID: ${pacienteAtual.id})</h3>`
+            container.innerHTML = `<h3>Paciente: ${pacienteEncontrado.nome}</h3>`
 
             if (
               prontuarioData.sucesso &&
               prontuarioData.prontuarios.length > 0
             ) {
               container.innerHTML += '<h4>Histórico de Consultas:</h4>'
-              prontuarioData.prontuarios.forEach((p) => {
+
+              prontuarioData.prontuarios.forEach((prontuario) => {
+                const informacoesDescriptografadas = descriptografar(
+                  prontuario.data.informacoes
+                )
+
                 container.innerHTML += `
-                          <div class="prontuario-item">
-                            <div class="prontuario-header">
-                              <strong>Dr(a). <span class="math-inline">\{p\.data\.medico\}</strong\>
-<span\></span>{new Date(p.timestamp).toLocaleDateString('pt-BR')}</span>
-                            </div>
-                            <p>${descriptografar(p.data.informacoes)}</p>
-                          </div>`
+                                <div class="prontuario-item">
+                                    <div class="prontuario-header">
+                                        <strong>Dr(a). ${
+                                          prontuario.data.medico
+                                        }</strong>
+                                        <span>${new Date(
+                                          prontuario.timestamp
+                                        ).toLocaleDateString('pt-BR')}</span>
+                                    </div>
+                                    <p>${informacoesDescriptografadas}</p>
+                                </div>
+                            `
               })
             } else {
-              container.innerHTML += `<div class="alert alert-info">Este é o primeiro prontuário para ${
-                pacienteAtual.tipo === 'usuario' ? 'o usuário' : 'o paciente'
-              }.</div>`
+              container.innerHTML +=
+                '<div class="alert alert-info">Primeiro prontuário será criado</div>'
             }
             document.getElementById('novo-prontuario').style.display = 'block'
           } else {
-            container.innerHTML =
-              '<div class="alert alert-error">Paciente não encontrado. Selecione na lista.</div>'
+            // Paciente não encontrado
+            alert(
+              'Usuário não cadastrado no Sistema de Prontuários. Favor cadastrar este usuário. Contacte o administrador'
+            )
+            logout()
+            location.reload()
+            return // Interrompe a função
           }
         } catch (error) {
+          console.error('Erro ao buscar paciente:', error)
           container.innerHTML =
-            '<div class="alert alert-error">Erro ao buscar paciente.</div>'
+            '<div class="alert alert-error">Erro ao buscar paciente</div>'
         }
       }
 
-      // Salvar Prontuário
+      // Salvar prontuário
       document
         .getElementById('prontuario-form')
         .addEventListener('submit', async (e) => {
           e.preventDefault()
+
           const informacoes = document.getElementById('informacoes').value
-          if (!informacoes.trim()) {
+
+          // MODIFICAÇÃO 2: Verificação do campo de informações
+          if (!informacoes || informacoes.trim() === '') {
             alert(
               'Preencha o formulário antes de salvar. Informações inseridas NÃO podem ser ALTERADAS!'
             )
-            return
+            return // Para a execução da função
           }
+
           if (!pacienteAtual) {
             mostrarMensagem(
               'prontuario-message',
-              'Selecione um paciente',
+              'Selecione um paciente primeiro',
               'error'
             )
             return
           }
 
           try {
-            const prontuarioResponse = await fetch(`${API_URL}/prontuario`, {
+            const informacoesCriptografadas = criptografar(informacoes)
+
+            const response = await fetch(`${API_URL}/prontuario`, {
               method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
+              headers: {
+                'Content-Type': 'application/json',
+              },
               body: JSON.stringify({
                 pacienteId: pacienteAtual.id,
                 medico: usuarioLogado.nome,
-                informacoes: criptografar(informacoes),
+                informacoes: informacoesCriptografadas,
               }),
             })
-            const prontuarioData = await prontuarioResponse.json()
 
-            if (prontuarioData.sucesso) {
+            const data = await response.json()
+
+            if (data.sucesso) {
               mostrarMensagem(
                 'prontuario-message',
-                'Prontuário salvo com sucesso!',
+                'Prontuário salvo com sucesso! Atualizando...',
                 'success'
               )
               document.getElementById('informacoes').value = ''
-
-              // LÓGICA DE ATUALIZAÇÃO DO TIPO DE USUÁRIO
-              if (pacienteAtual.tipo === 'usuario') {
-                console.log(
-                  `Usuário ${pacienteAtual.id} é do tipo 'usuario'. Tentando atualizar para 'paciente'.`
-                )
-                try {
-                  const updateResponse = await fetch(
-                    `<span class="math-inline">\{API\_URL\}/usuarios/</span>{pacienteAtual.id}/tipo`,
-                    {
-                      method: 'PUT',
-                      headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify({ tipo: 'paciente' }),
-                    }
-                  )
-                  const updateData = await updateResponse.json()
-                  if (updateData.sucesso) {
-                    console.log(
-                      'Tipo do usuário atualizado para paciente com sucesso.'
-                    )
-                    pacienteAtual.tipo = 'paciente' // Atualiza o objeto local
-                  } else {
-                    console.error(
-                      'Falha ao atualizar o tipo do usuário:',
-                      updateData.mensagem
-                    )
-                  }
-                } catch (updateError) {
-                  console.error(
-                    'Erro de rede ao tentar atualizar o tipo do usuário:',
-                    updateError
-                  )
-                }
-              }
-              // FIM DA LÓGICA DE ATUALIZAÇÃO
-
-              await buscarPaciente() // Recarrega o histórico
+              await buscarPaciente() // Recarrega a lista de prontuários
             } else {
               mostrarMensagem(
                 'prontuario-message',
@@ -921,6 +991,7 @@
               )
             }
           } catch (error) {
+            console.error('Erro ao salvar prontuário:', error)
             mostrarMensagem(
               'prontuario-message',
               'Erro de conexão ao salvar',
@@ -931,10 +1002,12 @@
 
       // Administrador
       async function carregarAdmin() {
+        // Limpar os campos do formulário de criação de usuário
         document.getElementById('novo-nome').value = ''
         document.getElementById('novo-id').value = ''
-        document.getElementById('novo-tipo').value = 'usuario'
+        document.getElementById('novo-tipo').value = 'paciente' // Reseta para o valor padrão
         document.getElementById('nova-senha').value = ''
+
         await carregarUsuarios()
         mostrarPagina('admin-page')
       }
@@ -943,22 +1016,30 @@
         try {
           const response = await fetch(`${API_URL}/usuarios`)
           const data = await response.json()
+
           const tbody = document.getElementById('usuarios-tbody')
           tbody.innerHTML = ''
+
           if (data.sucesso) {
             data.usuarios.forEach((usuario) => {
               const row = tbody.insertRow()
               row.innerHTML = `
-                <td><span class="math-inline">\{usuario\.nome\}</td\>
-<td\></span>{usuario.id}</td>
-                <td><span class="math-inline">\{usuario\.tipo\}</td\>
-<td\>
-<button class\="btn btn\-danger" onclick\="deletarUsuario\('</span>{usuario.id}')" ${
-                usuario.id === 'admin' ? 'disabled' : ''
-              }>
-                    Deletar
-                  </button>
-                </td>`
+                            <td>${usuario.nome}</td>
+                            <td>${usuario.id}</td>
+                            <td>${usuario.tipo}</td>
+                            <td>
+                                <button class="btn btn-danger" onclick="deletarUsuario('${
+                                  usuario.id
+                                }')" 
+                                        ${
+                                          usuario.id === 'admin'
+                                            ? 'disabled'
+                                            : ''
+                                        }>
+                                    Deletar
+                                </button>
+                            </td>
+                        `
             })
           }
         } catch (error) {
@@ -968,7 +1049,7 @@
 
       async function criarUsuario() {
         const nome = document.getElementById('novo-nome').value
-        const id = document.getElementById('novo-id').value
+        const id = document.getElementById('novo-nome').value
         const tipo = document.getElementById('novo-tipo').value
         const senha = document.getElementById('nova-senha').value
 
@@ -980,10 +1061,14 @@
         try {
           const response = await fetch(`${API_URL}/usuarios`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+              'Content-Type': 'application/json',
+            },
             body: JSON.stringify({ nome, id, tipo, senha }),
           })
+
           const data = await response.json()
+
           if (data.sucesso) {
             mostrarMensagem(
               'admin-message',
@@ -998,18 +1083,23 @@
             mostrarMensagem('admin-message', data.mensagem, 'error')
           }
         } catch (error) {
+          console.error('Erro ao criar usuário:', error)
           mostrarMensagem('admin-message', 'Erro de conexão', 'error')
         }
       }
 
       async function deletarUsuario(id) {
-        if (!confirm(`Tem certeza que deseja deletar o usuário ${id}?`)) return
+        if (!confirm(`Tem certeza que deseja deletar o usuário ${id}?`)) {
+          return
+        }
+
         try {
-          const response = await fetch(
-            `<span class="math-inline">\{API\_URL\}/usuarios/</span>{id}`,
-            { method: 'DELETE' }
-          )
+          const response = await fetch(`${API_URL}/usuarios/${id}`, {
+            method: 'DELETE',
+          })
+
           const data = await response.json()
+
           if (data.sucesso) {
             mostrarMensagem(
               'admin-message',
@@ -1021,32 +1111,43 @@
             mostrarMensagem('admin-message', data.mensagem, 'error')
           }
         } catch (error) {
+          console.error('Erro ao deletar usuário:', error)
           mostrarMensagem('admin-message', 'Erro de conexão', 'error')
         }
       }
 
-      // Exames (Paciente e Médico)
+      // Exames - Paciente
       async function abrirExamesPaciente() {
         document.getElementById('exames-paciente-nome').textContent =
           usuarioLogado.nome
+
         try {
-          const response = await fetch(
-            `<span class="math-inline">\{API\_URL\}/exames\-nome/</span>{encodeURIComponent(usuarioLogado.nome)}`
-          )
+          const response = await fetch(`${API_URL}/exames/${usuarioLogado.id}`)
           const data = await response.json()
+
           const tbody = document.getElementById('exames-paciente-tbody')
           tbody.innerHTML = ''
+
           if (data.sucesso && data.exames.length > 0) {
             data.exames.forEach((exame) => {
-              tbody.innerHTML += `<tr><td><span class="math-inline">\{exame\.nomeExame\}</td\><td\></span>{exame.resultado}</td><td><span class="math-inline">\{exame\.nomeHospital\}</td\><td\></span>{new Date(exame.dataExame).toLocaleDateString('pt-BR')}</td></tr>`
+              const row = tbody.insertRow()
+              row.innerHTML = `
+                            <td>${exame.nomeExame}</td>
+                            <td>${exame.resultado}</td>
+                            <td>${exame.nomeHospital}</td>
+                            <td>${new Date(exame.dataExame).toLocaleDateString(
+                              'pt-BR'
+                            )}</td>
+                        `
             })
           } else {
             tbody.innerHTML =
               '<tr><td colspan="4" class="text-center">Nenhum exame encontrado</td></tr>'
           }
+
           mostrarPagina('exames-paciente-page')
         } catch (error) {
-          console.error('Erro ao carregar exames do paciente:', error)
+          console.error('Erro ao carregar exames:', error)
         }
       }
 
@@ -1054,32 +1155,49 @@
         mostrarPagina('paciente-page')
       }
 
+      // Exames - Médico
       async function abrirExamesMedico() {
         if (!pacienteAtual) {
           alert('Selecione um paciente primeiro')
           return
         }
+
         document.getElementById(
           'exames-medico-paciente'
         ).textContent = `Exames de: ${pacienteAtual.nome}`
+
         try {
           const response = await fetch(
-            `<span class="math-inline">\{API\_URL\}/exames\-nome/</span>{encodeURIComponent(pacienteAtual.nome)}`
+            `${API_URL}/exames-nome/${encodeURIComponent(pacienteAtual.nome)}`
           )
           const data = await response.json()
+
           const tbody = document.getElementById('exames-medico-tbody')
           tbody.innerHTML = ''
+
           if (data.sucesso && data.exames.length > 0) {
             data.exames.forEach((exame, index) => {
-              tbody.innerHTML += `<tr><td><input type="checkbox" id="exame-<span class="math-inline">\{index\}" data\-exame\='</span>{JSON.stringify(exame)}'></td><td><span class="math-inline">\{exame\.nomeExame\}</td\><td\></span>{exame.resultado}</td><td><span class="math-inline">\{exame\.nomeHospital\}</td\><td\></span>{new Date(exame.dataExame).toLocaleDateString('pt-BR')}</td></tr>`
+              const row = tbody.insertRow()
+              row.innerHTML = `
+                            <td><input type="checkbox" id="exame-${index}" data-exame='${JSON.stringify(
+                exame
+              )}'></td>
+                            <td>${exame.nomeExame}</td>
+                            <td>${exame.resultado}</td>
+                            <td>${exame.nomeHospital}</td>
+                            <td>${new Date(exame.dataExame).toLocaleDateString(
+                              'pt-BR'
+                            )}</td>
+                        `
             })
           } else {
             tbody.innerHTML =
               '<tr><td colspan="5" class="text-center">Nenhum exame encontrado</td></tr>'
           }
+
           mostrarPagina('exames-medico-page')
         } catch (error) {
-          console.error('Erro ao carregar exames para o médico:', error)
+          console.error('Erro ao carregar exames:', error)
         }
       }
 
@@ -1088,19 +1206,23 @@
           '#exames-medico-tbody input[type="checkbox"]:checked'
         )
         let textoExames = ''
+
         checkboxes.forEach((checkbox) => {
           const exame = JSON.parse(checkbox.dataset.exame)
-          textoExames += `\n\n--- EXAME: ${exame.nomeExame} ---\nHospital: ${
-            exame.nomeHospital
-          }\nResultado: ${exame.resultado}\nData: ${new Date(
-            exame.dataExame
-          ).toLocaleDateString('pt-BR')}`
+          textoExames += `\n\n--- EXAME: ${exame.nomeExame} ---\n`
+          textoExames += `Hospital: ${exame.nomeHospital}\n`
+          textoExames += `Resultado: ${exame.resultado}\n`
+          textoExames += `Data: ${new Date(exame.dataExame).toLocaleDateString(
+            'pt-BR'
+          )}`
         })
+
         if (textoExames) {
           const informacoesAtual = document.getElementById('informacoes').value
           document.getElementById('informacoes').value =
             informacoesAtual + textoExames
         }
+
         voltarMedico()
       }
 
@@ -1112,12 +1234,18 @@
       function logout() {
         usuarioLogado = null
         pacienteAtual = null
+
+        // Limpar formulários
         document.getElementById('login-form').reset()
         document.getElementById('paciente-busca').value = ''
-        document.getElementById('paciente-busca').readOnly = false
-        document.getElementById('btn-buscar-paciente').disabled = false
+        document.getElementById('informacoes').value = ''
         document.getElementById('historico-paciente').innerHTML = ''
         document.getElementById('novo-prontuario').style.display = 'none'
+
+        // Reabilitar campo de busca e botão para a próxima sessão
+        document.getElementById('paciente-busca').readOnly = false
+        document.getElementById('btn-buscar-paciente').disabled = false
+
         mostrarPagina('login-page')
       }
 
