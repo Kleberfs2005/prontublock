@@ -339,7 +339,6 @@
   </head>
   <body>
     <div class="container">
-      <!-- Página 01 - Login -->
       <div id="login-page" class="page active">
         <div class="header">
           <h1>🏥 Sistema de Prontuários Médicos</h1>
@@ -360,8 +359,8 @@
         </form>
       </div>
 
-      <footer>💻 Desenvolvido Kleber FS - PPGCC - BD UNESP 2025</footer>
-      <!-- Página 02 - Paciente -->
+      <footer>Desenvolvido Kleber FS - PPGCC - BD UNESP 2025</footer>
+
       <div id="paciente-page" class="page">
         <div class="header">
           <h1>👤 Portal do Paciente</h1>
@@ -377,7 +376,7 @@
           </div>
         </div>
       </div>
-      <!-- Página 03 - Médico -->
+
       <div id="medico-page" class="page">
         <div class="header">
           <h1>👨‍⚕️ Portal do Médico</h1>
@@ -413,6 +412,7 @@
             🔒 As informações do prontuário serão criptografadas antes do
             armazenamento no blockchain
           </div>
+          <div id="prontuario-message"></div>
           <form id="prontuario-form">
             <div class="form-group">
               <label for="informacoes">Informações do Prontuário:</label>
@@ -444,7 +444,7 @@
           <button class="btn" onclick="logout()">Sair</button>
         </div>
       </div>
-      <!-- Página 04 - Administrador -->
+
       <div id="admin-page" class="page">
         <div class="header">
           <h1>⚙️ Painel Administrativo</h1>
@@ -458,12 +458,7 @@
           </div>
           <div class="form-group">
             <label for="novo-id">ID/Usuário:</label>
-            <input
-              type="text"
-              id="novo-id"
-              placeholder="ID único do usuário"
-              disabled
-            />
+            <input type="text" id="novo-id" placeholder="ID único do usuário" />
           </div>
           <div class="form-group">
             <label for="novo-tipo">Tipo de Usuário:</label>
@@ -504,7 +499,7 @@
           </table>
         </div>
       </div>
-      <!-- Página 05 - Exames Paciente -->
+
       <div id="exames-paciente-page" class="page">
         <div class="header">
           <h1>🔬 Exames - Portal do Paciente</h1>
@@ -537,7 +532,7 @@
           <h1>🔬 Exames - Portal do Médico</h1>
           <p id="exames-medico-paciente"></p>
         </div>
-        <!-- Página 06 - Exames Médico -->
+
         <div id="exames-medico-content">
           <div class="table-container">
             <table id="exames-medico-table">
@@ -864,7 +859,7 @@
 
           if (!pacienteAtual) {
             mostrarMensagem(
-              'historico-paciente',
+              'prontuario-message',
               'Selecione um paciente primeiro',
               'error'
             )
@@ -890,15 +885,15 @@
 
             if (data.sucesso) {
               mostrarMensagem(
-                'historico-paciente',
-                'Prontuário salvo com sucesso no blockchain!',
+                'prontuario-message',
+                'Prontuário salvo com sucesso! Atualizando...',
                 'success'
               )
               document.getElementById('informacoes').value = ''
-              setTimeout(() => buscarPaciente(), 2000)
+              await buscarPaciente() // Recarrega a lista de prontuários
             } else {
               mostrarMensagem(
-                'historico-paciente',
+                'prontuario-message',
                 'Erro ao salvar prontuário',
                 'error'
               )
@@ -906,7 +901,7 @@
           } catch (error) {
             console.error('Erro ao salvar prontuário:', error)
             mostrarMensagem(
-              'historico-paciente',
+              'prontuario-message',
               'Erro de conexão ao salvar',
               'error'
             )
@@ -956,8 +951,7 @@
 
       async function criarUsuario() {
         const nome = document.getElementById('novo-nome').value
-        const id = document.getElementById('novo-nome').value
-        /*const id = document.getElementById('novo-id').value*/
+        const id = document.getElementById('novo-id').value
         const tipo = document.getElementById('novo-tipo').value
         const senha = document.getElementById('nova-senha').value
 
