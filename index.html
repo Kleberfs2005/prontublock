@@ -388,9 +388,6 @@
     </style>
   </head>
   <body>
-    <script>
-      //pagina01 - login ****************************************************
-    </script>
     <div class="container">
       <div id="login-page" class="page active">
         <div class="header">
@@ -418,9 +415,7 @@
       </div>
 
       <footer>💻Desenvolvido Kleber FS - PPGCC - BD UNESP 2025</footer>
-      <script>
-        //pagina02 - Paciente ***********************************************
-      </script>
+
       <div id="paciente-page" class="page">
         <div class="header">
           <h1>👤 Portal do Paciente</h1>
@@ -436,9 +431,7 @@
           </div>
         </div>
       </div>
-      <script>
-        //pagina03 - Médico *************************************************
-      </script>
+
       <div id="medico-page" class="page">
         <div class="header">
           <h1>👨‍⚕️ Portal do Médico</h1>
@@ -507,9 +500,7 @@
           <button class="btn" onclick="logout()">Sair</button>
         </div>
       </div>
-      <script>
-        //pagina03 - Administrador
-      </script>
+
       <div id="admin-page" class="page">
         <div class="header">
           <h1>⚙️ Painel Administrativo</h1>
@@ -528,7 +519,7 @@
           <div class="form-group">
             <label for="novo-tipo">Tipo de Usuário:</label>
             <select id="novo-tipo">
-              <option value="paciente">Paciente</option>
+              <option value="usuario">Usuário</option>
               <option value="medico">Médico</option>
               <option value="admin">Administrador</option>
             </select>
@@ -564,9 +555,7 @@
           </table>
         </div>
       </div>
-      <script>
-        //pagina05 - Exames - Visualização do paciente ****************************************************
-      </script>
+
       <div id="exames-paciente-page" class="page">
         <div class="header">
           <h1>🔬 Exames - Portal do Paciente</h1>
@@ -593,9 +582,7 @@
           <button class="btn" onclick="voltarPaciente()">Voltar</button>
         </div>
       </div>
-      <script>
-        //pagina06 - Exames - Visualização do Médico ****************************************************
-      </script>
+
       <div id="exames-medico-page" class="page">
         <div class="header">
           <h1>🔬 Exames - Portal do Médico</h1>
@@ -697,6 +684,7 @@
             if (data.sucesso) {
               usuarioLogado = data.usuario
 
+              // ALTERAÇÃO 2 APLICADA AQUI
               switch (usuarioLogado.tipo) {
                 case 'paciente':
                   await carregarPaciente()
@@ -706,6 +694,12 @@
                   break
                 case 'admin':
                   await carregarAdmin()
+                  break
+                case 'usuario': // Novo caso para o tipo 'usuario'
+                  alert(
+                    'Usuário cadastrado, sem dados médico. Dados disponíveis, após primeira consulta.'
+                  )
+                  logout() // Chama a função logout que já limpa os dados e volta para a tela de login
                   break
               }
             } else {
@@ -1003,9 +997,8 @@
       async function carregarAdmin() {
         // Limpar os campos do formulário de criação de usuário
         document.getElementById('novo-nome').value = ''
-        /*document.getElementById('novo-id').value = '' */
-        document.getElementById('novo-id').value = '' // Reseta para o valor padrão
-        document.getElementById('novo-tipo').value = 'paciente' // Reseta para o valor padrão
+        document.getElementById('novo-id').value = ''
+        document.getElementById('novo-tipo').value = 'usuario' // Reseta para o valor padrão
         document.getElementById('nova-senha').value = ''
 
         await carregarUsuarios()
@@ -1049,8 +1042,7 @@
 
       async function criarUsuario() {
         const nome = document.getElementById('novo-nome').value
-        /*const id = document.getElementById('novo-id').value  - ñ mexe usado p/ padronizar o login*/
-        const id = document.getElementById('novo-nome').value
+        const id = document.getElementById('novo-id').value
         const tipo = document.getElementById('novo-tipo').value
         const senha = document.getElementById('nova-senha').value
 
@@ -1123,8 +1115,6 @@
           usuarioLogado.nome
 
         try {
-          // ----- CORREÇÃO APLICADA AQUI -----
-          // Alterado para buscar exames pelo NOME do paciente, assim como na função do médico.
           const response = await fetch(
             `${API_URL}/exames-nome/${encodeURIComponent(usuarioLogado.nome)}`
           )
