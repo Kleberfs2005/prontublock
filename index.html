@@ -394,7 +394,7 @@
     <div class="container">
       <div id="login-page" class="page active">
         <div class="header">
-          <h1>🏥 Sistema de Prontuários Médicos online</h1>
+          <h1>🏥 Sistema de Prontuários Médicos</h1>
           <p>Segurança e Tecnologia Blockchain</p>
           <small>KFS V0.7</small>
         </div>
@@ -508,7 +508,7 @@
         </div>
       </div>
       <script>
-        //pagina03 - Administrador*************************************************
+        //pagina03 - Administrador
       </script>
       <div id="admin-page" class="page">
         <div class="header">
@@ -941,7 +941,6 @@
 
           const informacoes = document.getElementById('informacoes').value
 
-          // MODIFICAÇÃO 2: Verificação do campo de informações
           if (!informacoes || informacoes.trim() === '') {
             alert(
               'Preencha o formulário antes de salvar. Informações inseridas NÃO podem ser ALTERADAS!'
@@ -1122,7 +1121,11 @@
           usuarioLogado.nome
 
         try {
-          const response = await fetch(`${API_URL}/exames/${usuarioLogado.id}`)
+          // ----- CORREÇÃO APLICADA AQUI -----
+          // Alterado para buscar exames pelo NOME do paciente, assim como na função do médico.
+          const response = await fetch(
+            `${API_URL}/exames-nome/${encodeURIComponent(usuarioLogado.nome)}`
+          )
           const data = await response.json()
 
           const tbody = document.getElementById('exames-paciente-tbody')
