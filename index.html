@@ -1003,7 +1003,8 @@
       async function carregarAdmin() {
         // Limpar os campos do formulário de criação de usuário
         document.getElementById('novo-nome').value = ''
-        document.getElementById('novo-id').value = ''
+        /*document.getElementById('novo-id').value = '' */
+        document.getElementById('novo-id').value = '' // Reseta para o valor padrão
         document.getElementById('novo-tipo').value = 'paciente' // Reseta para o valor padrão
         document.getElementById('nova-senha').value = ''
 
@@ -1048,7 +1049,8 @@
 
       async function criarUsuario() {
         const nome = document.getElementById('novo-nome').value
-        const id = document.getElementById('novo-id').value
+        /*const id = document.getElementById('novo-id').value  - ñ mexe usado p/ padronizar o login*/
+        const id = document.getElementById('novo-nome').value
         const tipo = document.getElementById('novo-tipo').value
         const senha = document.getElementById('nova-senha').value
 
