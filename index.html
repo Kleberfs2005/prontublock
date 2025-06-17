@@ -389,12 +389,12 @@
   </head>
   <body>
     <script>
-      //pagina de login
+      //pagina01 - login ****************************************************
     </script>
     <div class="container">
       <div id="login-page" class="page active">
         <div class="header">
-          <h1>🏥 Sistema de Prontuários Médicos</h1>
+          <h1>🏥 Sistema de Prontuários Médicos online</h1>
           <p>Segurança e Tecnologia Blockchain</p>
           <small>KFS V0.7</small>
         </div>
@@ -408,15 +408,19 @@
             <input type="password" id="senha" name="senha" required />
           </div>
           <div id="login-message"></div>
-          <button type="submit" id="btn-login" class="btn">
-            <span class="spinner"></span>
-            <span class="btn-text">Entrar</span>
-          </button>
+          <div style="text-align: center">
+            <button type="submit" id="btn-login" class="btn">
+              <span class="spinner"></span>
+              <span class="btn-text">Entrar</span>
+            </button>
+          </div>
         </form>
       </div>
 
       <footer>💻Desenvolvido Kleber FS - PPGCC - BD UNESP 2025</footer>
-
+      <script>
+        //pagina02 - Paciente ***********************************************
+      </script>
       <div id="paciente-page" class="page">
         <div class="header">
           <h1>👤 Portal do Paciente</h1>
@@ -432,7 +436,9 @@
           </div>
         </div>
       </div>
-
+      <script>
+        //pagina03 - Médico *************************************************
+      </script>
       <div id="medico-page" class="page">
         <div class="header">
           <h1>👨‍⚕️ Portal do Médico</h1>
@@ -501,7 +507,9 @@
           <button class="btn" onclick="logout()">Sair</button>
         </div>
       </div>
-
+      <script>
+        //pagina03 - Administrador*************************************************
+      </script>
       <div id="admin-page" class="page">
         <div class="header">
           <h1>⚙️ Painel Administrativo</h1>
@@ -556,7 +564,9 @@
           </table>
         </div>
       </div>
-
+      <script>
+        //pagina05 - Exames - Visualização do paciente ****************************************************
+      </script>
       <div id="exames-paciente-page" class="page">
         <div class="header">
           <h1>🔬 Exames - Portal do Paciente</h1>
@@ -583,7 +593,9 @@
           <button class="btn" onclick="voltarPaciente()">Voltar</button>
         </div>
       </div>
-
+      <script>
+        //pagina06 - Exames - Visualização do Médico ****************************************************
+      </script>
       <div id="exames-medico-page" class="page">
         <div class="header">
           <h1>🔬 Exames - Portal do Médico</h1>
@@ -928,6 +940,14 @@
           e.preventDefault()
 
           const informacoes = document.getElementById('informacoes').value
+
+          // MODIFICAÇÃO 2: Verificação do campo de informações
+          if (!informacoes || informacoes.trim() === '') {
+            alert(
+              'Preencha o formulário antes de salvar. Informações inseridas NÃO podem ser ALTERADAS!'
+            )
+            return // Para a execução da função
+          }
 
           if (!pacienteAtual) {
             mostrarMensagem(
