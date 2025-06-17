@@ -4,6 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sistema de Prontuários Médicos</title>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🏥</text></svg>"
+    />
     <style>
       * {
         margin: 0;
@@ -126,6 +130,28 @@
         transition: all 0.3s ease;
         margin-right: 10px;
         margin-bottom: 10px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .btn .spinner {
+        display: none;
+        width: 16px;
+        height: 16px;
+        border: 2px solid rgba(255, 255, 255, 0.5);
+        border-top-color: white;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        margin-right: 8px;
+      }
+
+      .btn.loading .spinner {
+        display: inline-block;
+      }
+
+      .btn.loading .btn-text {
+        display: inline-block;
       }
 
       .btn:hover:not(:disabled) {
@@ -182,6 +208,20 @@
 
       tr:hover {
         background-color: #f8f9fa;
+      }
+
+      /* Estilos específicos para a tabela de administradores */
+      #usuarios-table th,
+      #usuarios-table td {
+        padding: 8px 12px; /* Reduz o padding vertical e horizontal */
+        vertical-align: middle; /* Alinha o texto verticalmente no centro */
+      }
+
+      #usuarios-table .btn {
+        padding: 5px 10px; /* Botão menor dentro da tabela */
+        font-size: 14px;
+        margin-right: 0;
+        margin-bottom: 0; /* Remove a margem do botão */
       }
 
       .prontuario-item {
@@ -365,7 +405,10 @@
             <input type="password" id="senha" name="senha" required />
           </div>
           <div id="login-message"></div>
-          <button type="submit" class="btn">Entrar</button>
+          <button type="submit" id="btn-login" class="btn">
+            <span class="spinner"></span>
+            <span class="btn-text">Entrar</span>
+          </button>
         </form>
       </div>
 
@@ -618,6 +661,12 @@
 
           const usuario = document.getElementById('usuario').value
           const senha = document.getElementById('senha').value
+          const loginButton = document.getElementById('btn-login')
+
+          // Ativar spinner e desabilitar botão
+          loginButton.disabled = true
+          loginButton.classList.add('loading')
+          loginButton.querySelector('.btn-text').textContent = 'Entrando...'
 
           try {
             const response = await fetch(`${API_URL}/login`, {
@@ -658,6 +707,11 @@
               'Erro de conexão com o servidor',
               'error'
             )
+          } finally {
+            // Desativar spinner e reabilitar botão
+            loginButton.disabled = false
+            loginButton.classList.remove('loading')
+            loginButton.querySelector('.btn-text').textContent = 'Entrar'
           }
         })
 
@@ -925,6 +979,12 @@
 
       // Administrador
       async function carregarAdmin() {
+        // Limpar os campos do formulário de criação de usuário
+        document.getElementById('novo-nome').value = ''
+        document.getElementById('novo-id').value = ''
+        document.getElementById('novo-tipo').value = 'paciente' // Reseta para o valor padrão
+        document.getElementById('nova-senha').value = ''
+
         await carregarUsuarios()
         mostrarPagina('admin-page')
       }
