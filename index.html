@@ -17,7 +17,7 @@
 
       body {
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #3d5ce6 0%, #0a0455 100%);
         min-height: 100vh;
         padding: 20px;
       }
@@ -100,6 +100,14 @@
         transition: all 0.3s ease;
       }
 
+      img {
+        width: 48px; /* Define a largura da imagem */
+        height: auto; /* Mantém a proporção original */
+        /*border-radius: 10px; /* Adiciona bordas arredondadas */
+        /*box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3); /* Adiciona sombra */
+        /*margin-right: 20px; /* Espaço à direita da imagem */
+      }
+
       input:focus,
       select:focus,
       textarea:focus {
@@ -119,7 +127,7 @@
       }
 
       .btn {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: linear-gradient(135deg, #163ef0 0%, #041870 100%);
         color: white;
         border: none;
         padding: 12px 30px;
@@ -394,7 +402,8 @@
     <div class="container">
       <div id="login-page" class="page active">
         <div class="header">
-          <h1>🏥 Sistema de Prontuários Médicos</h1>
+          <img text-align: center src="logokfs.png" alt="Logo" />
+          <h1>Sistema de Prontuários Médicos</h1>
           <p>Segurança e Tecnologia Blockchain</p>
           <small>KFS V0.85</small>
         </div>
@@ -423,7 +432,8 @@
       </script>
       <div id="paciente-page" class="page">
         <div class="header">
-          <h1>👤 Portal do Paciente</h1>
+          <img text-align: center src="paciente.png" alt="Logo" />
+          <h1>Portal do Paciente</h1>
           <p id="paciente-nome"></p>
         </div>
         <div id="paciente-content">
@@ -441,7 +451,8 @@
       </script>
       <div id="medico-page" class="page">
         <div class="header">
-          <h1>👨‍⚕️ Portal do Médico</h1>
+          <img text-align: center src="estetio2.png" alt="Logo" />
+          <h1>Portal do Médico</h1>
           <p id="medico-nome"></p>
         </div>
         <div class="form-group" style="position: relative">
@@ -508,11 +519,12 @@
         </div>
       </div>
       <script>
-        //pagina03 - Administrador
+        //pagina03 - Administrador *************************************************
       </script>
       <div id="admin-page" class="page">
         <div class="header">
-          <h1>⚙️ Painel Administrativo</h1>
+          <img text-align: center src="logokfs.png" alt="Logo" />
+          <h1>Painel Administrativo</h1>
           <p>Gerenciamento de Usuários</p>
         </div>
 
@@ -569,7 +581,8 @@
       </script>
       <div id="exames-paciente-page" class="page">
         <div class="header">
-          <h1>🔬 Exames - Portal do Paciente</h1>
+          <img text-align: center src="exame.png" alt="Logo" />
+          <h1>Exames - Portal do Paciente</h1>
           <p id="exames-paciente-nome"></p>
         </div>
 
@@ -598,7 +611,8 @@
       </script>
       <div id="exames-medico-page" class="page">
         <div class="header">
-          <h1>🔬 Exames - Portal do Médico</h1>
+          <img text-align: center src="medico.png" alt="Logo" />
+          <h1>Exames - Portal do Médico</h1>
           <p id="exames-medico-paciente"></p>
         </div>
 
