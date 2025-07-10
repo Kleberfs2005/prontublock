@@ -1271,6 +1271,56 @@
       document.addEventListener('DOMContentLoaded', () => {
         console.log('Sistema de Prontuários Médicos carregado')
       })
+     
+       //Função para medir latencia
+      async function medirLatencia() {
+      const resultsDiv = document.getElementById('latency-results');
+      resultsDiv.innerHTML = '<div class="loading">Medindo latências...</div>';
+
+      const { performance } = window; // Usando a API de performance do navegador
+      const frontendStart = performance.now();
+
+      try {
+        const response = await fetch(`${API_URL}/latency-test`);
+        const data = await response.json();
+        const frontendEnd = performance.now();
+
+    if (data.sucesso) {
+        // 1. Latência de Ida e Volta (Frontend -> Backend -> Frontend)
+        const totalRoundTripLatency = frontendEnd - frontendStart;
+
+        // 2. Latência do Backend (valor calculado pelo servidor)
+        const backendLatency = parseFloat(data.latencies.backendProcessingLatency);
+
+        // 3. Latência do Banco de Dados (valor calculado pelo servidor)
+        const dbLatency = parseFloat(data.latencies.databaseLatency);
+
+        // 4. Latência de Rede (aproximação)
+        // É a latência total menos o tempo que o backend levou para processar
+        const networkLatency = totalRoundTripLatency - backendLatency;
+
+        // Exibindo os resultados
+        resultsDiv.innerHTML = `
+          <div class="alert alert-info">
+          <h4>Resultados do Teste de Latência (em milissegundos):</h4>
+          <ul>
+            <li><strong>Latência de Rede (Frontend ↔ Backend):</strong> ${networkLatency.toFixed(2)} ms</li>
+            <li><strong>Latência do Processamento no Backend:</strong> ${backendLatency.toFixed(2)} ms</li>
+            <li><strong>Latência do Banco de Dados (Backend → MongoDB):</strong> ${dbLatency.toFixed(2)} ms</li>
+          </ul>
+          <hr>
+          <p><strong>Latência Total da Requisição (ponto de vista do usuário):</strong> ${totalRoundTripLatency.toFixed(2)} ms</p>
+        </div>
+      `;
+    } else {
+      resultsDiv.innerHTML = '<div class="alert alert-error">Falha ao obter medição de latência.</div>';
+    }
+  } catch (error) {
+    console.error("Erro ao medir latência:", error);
+    resultsDiv.innerHTML = '<div class="alert alert-error">Erro de conexão ao tentar medir a latência.</div>';
+  }
+}   //Final da funcao medir latencia
+      
     </script>
   </body>
 </html>
